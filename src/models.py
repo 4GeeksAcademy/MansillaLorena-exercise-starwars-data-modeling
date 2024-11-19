@@ -14,37 +14,39 @@ class User(Base):
     firstname= Column(String(30))
     email= Column(String(40),nullable=False,unique=True)
     password=Column(String(12),nullable=False)
-    favorites_planets= relationship('Favorites_planets',back_populates='planetId_relationship')
-    favorites_characters= relationship('Favorites_characters',back_populates='characterId_relationship')
+    favorites_planets= relationship('Favorites_planets',back_populates='planet')
+    favorites_characters= relationship('Favorites_characters',back_populates='character')
 
 class Favorites_planets(Base):
     __tablename__ = 'favorites_planets'
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer,ForeignKey('User.id'))
+    user_id = Column(Integer,ForeignKey('user.id'))
     planet_id = Column(Integer,ForeignKey('planet.id'))
-    planet_relationship= relationship('User',back_populates='favorites_planets')
-    planet=Column(Integer,ForeignKey('Planet.id'))
-    planet_relationship= relationship('Planet',back_populates='favorites_planets')
+    planet=Column(Integer,ForeignKey('planet.id'))
+    
+    user = relationship('User',back_populates='favorites_planets')
+    planet = relationship('Planet',back_populates='favorites_planets')
       
 class Favorites_characters(Base):
     __tablename__='favorites_characters'
     id=Column(Integer,primary_key=True)
-    user_id=Column(Integer,ForeignKey('User.id'))
-    character_id=Column(Integer,ForeignKey('Character.id'))
-    characterId_relationship= relationship('User',back_populates='favorites_characters')
-    character= Column(Integer,ForeignKey('Character.id'))
-    character_relationship= relationship('Character',back_populates='favorites_characters')
+    user_id=Column(Integer,ForeignKey('user.id'))
+    character_id=Column(Integer,ForeignKey('character.id'))
+    character= Column(Integer,ForeignKey('character.id'))
+    
+    user = relationship('User',back_populates='favorites_characters')
+    character= relationship('Character',back_populates='favorites_characters')
 
 class Planet(Base):
     __tablename__='planet'
     id=Column(Integer,primary_key=True)
-    favorites_planets= relationship('Favorites_planets',back_populates='planet_relationship')
+    favorites_planets= relationship('Favorites_planets',back_populates='planet')
 
     
 class Character(Base):
     __tablename__='character'
     id=Column(Integer,primary_key=True)
-    favorites_characters= relationship('Favorites_characters',back_populates='character_relationship')
+    favorites_characters= relationship('Favorites_characters',back_populates='character')
 
     
     def to_dict(self):
